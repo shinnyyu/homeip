@@ -677,6 +677,12 @@ def main():
 
     log("CLOUDFLARE WORKER", f"检测成功: {len(success)}")
     log("CLOUDFLARE WORKER", f"检测失败: {len(failed)}" + (f" (其中 Worker 异常 {len(worker_errors)})" if worker_errors else ""))
+    # === 新增这段调试代码，打印前 3 个异常的具体原因 ===
+    if worker_errors:
+        log("CLOUDFLARE WORKER", "详细错误示例:")
+        for r in worker_errors[:3]:
+            print(f" - {r['host']}:{r['port']} -> {r.get('error')}", flush=True)
+    # ===============================================
     log("CLOUDFLARE WORKER", f"耗时: {elapsed:.1f}s")
 
     # 硬性失败: Worker 完全不可达 (没有任何一个请求拿到正常响应)
